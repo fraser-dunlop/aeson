@@ -513,6 +513,7 @@ typeMismatch expected actual =
              Object _ -> "Object"
              Array _  -> "Array"
              String _ -> "String"
+             Ident _  -> "Ident"
              Number _ -> "Number"
              Bool _   -> "Boolean"
              Null     -> "Null"

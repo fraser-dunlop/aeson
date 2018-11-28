@@ -1781,6 +1781,7 @@ valueConName :: Value -> String
 valueConName (Object _) = "Object"
 valueConName (Array  _) = "Array"
 valueConName (String _) = "String"
+valueConName (Ident  _) = "Ident"
 valueConName (Number _) = "Number"
 valueConName (Bool   _) = "Boolean"
 valueConName Null       = "Null"

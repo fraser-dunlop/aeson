@@ -23,6 +23,7 @@ module Data.Aeson.Encoding.Builder
     , object
     , text
     , string
+    , ident
     , unquoted
     , quote
     , scientific
@@ -64,6 +65,7 @@ encodeToBuilder Null       = null_
 encodeToBuilder (Bool b)   = bool b
 encodeToBuilder (Number n) = scientific n
 encodeToBuilder (String s) = text s
+encodeToBuilder (Ident i)  = unquoted i
 encodeToBuilder (Array v)  = array v
 encodeToBuilder (Object m) = object m
 
@@ -111,6 +113,12 @@ quote b = B.char8 '"' <> b <> B.char8 '"'
 string :: String -> Builder
 string t = B.char8 '"' <> BP.primMapListBounded go t <> B.char8 '"'
   where go = BP.condB (> '\x7f') BP.charUtf8 (c2w >$< escapeAscii)
+
+ident :: String -> Builder
+ident t = BP.primMapListBounded go t
+  where go = BP.condB (> '\x7f') BP.charUtf8 (c2w >$< escapeAscii)
+
+
 
 escapeAscii :: BP.BoundedPrim Word8
 escapeAscii =

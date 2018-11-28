@@ -29,6 +29,7 @@ module Data.Aeson.Encoding.Internal
     , text
     , lazyText
     , string
+    , ident
     , list
     , dict
     , tuple
@@ -233,6 +234,9 @@ lazyText t = Encoding $
 
 string :: String -> Encoding' a
 string = Encoding . EB.string
+
+ident :: String -> Encoding' a
+ident = Encoding . EB.ident 
 
 -------------------------------------------------------------------------------
 -- chars

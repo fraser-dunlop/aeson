@@ -344,6 +344,7 @@ type Array = Vector Value
 data Value = Object !Object
            | Array !Array
            | String !Text
+           | Ident !Text
            | Number !Scientific
            | Bool !Bool
            | Null
@@ -366,6 +367,7 @@ instance NFData Value where
     rnf (Object o) = rnf o
     rnf (Array a)  = foldl' (\x y -> rnf y `seq` x) () a
     rnf (String s) = rnf s
+    rnf (Ident i)  = rnf i
     rnf (Number n) = rnf n
     rnf (Bool b)   = rnf b
     rnf Null       = ()
@@ -386,6 +388,7 @@ hashValue s (Object o)   = foldl' hashWithSalt
 hashValue s (Array a)    = foldl' hashWithSalt
                               (s `hashWithSalt` (1::Int)) a
 hashValue s (String str) = s `hashWithSalt` (2::Int) `hashWithSalt` str
+hashValue s (Ident i)    = s `hashWithSalt` (6::Int) `hashWithSalt` i
 hashValue s (Number n)   = s `hashWithSalt` (3::Int) `hashWithSalt` n
 hashValue s (Bool b)     = s `hashWithSalt` (4::Int) `hashWithSalt` b
 hashValue s Null         = s `hashWithSalt` (5::Int)
@@ -403,6 +406,8 @@ instance TH.Lift Value where
         e = S.base10Exponent n
     lift (String t) = [| String (pack s) |]
       where s = unpack t
+    lift (Ident i) = [| Ident (pack s) |]
+      where s = unpack i
     lift (Array a) = [| Array (V.fromList a') |]
       where a' = V.toList a
     lift (Object o) = [| Object (H.fromList . map (first pack) $ o') |]
